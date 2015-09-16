@@ -1,33 +1,24 @@
-var log4js = require('log4js');
-var today = new Date().toISOString();
-var todayInfo = today + '-info';
-var todayError = today + '-error';
-log4js.loadAppender('file');
-log4js.addAppender(log4js.appenders.file('logs/' + todayInfo + '.log'), todayInfo);
-log4js.addAppender(log4js.appenders.file('logs/' + todayError + '.log'), todayError);
-var infoLogger = log4js.getLogger(todayInfo);
-infoLogger.setLevel('INFO');
-var errorLogger = log4js.getLogger(todayError);
-errorLogger.setLevel('ERROR');
+var http = require("http");
+var url = require("url");
 
-function handleRequest(url, headers, response) {
+function handleRequest(request, response) {
+	var url = request.url;
+	var headers = request.headers;
 	response.writeHead(200, {"Content-Type": "text/plain"});
-	var urlIn = headers['urlIn'];
-	var urlOut = headers['urlOut'];
-	if (urlOut == url)
-		logInfo(urlIn, urlOut);
-	else
-		logError(urlIn, urlOut, url);
-  	response.write(url);
-  	response.end();
+	var cookie = parseCookie(request.headers.cookie);
+  response.write("Destination Url: " + url + "\n");
+	response.write("Cookies: " + JSON.stringify(cookie));
+  response.end();
 }
 
-function logInfo(urlIn, urlOut) {
-	infoLogger.info('origin url is ' + urlIn + ', and redirects to ' + urlOut);
-}
-
-function logError(urlIn, urlOut, urlActual) {
-	errorLogger.error('origin url is ' + urlOut + ', and should redirect to ' + urlOut + ', but goes to ' + urlActual);
+function parseCookie(cookie) {
+	var list = {},
+	rc = cookie;
+    rc && rc.split(';').forEach(function(cookie) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURI(parts.join('='));
+    });
+    return list;
 }
 
 function handleError(response) {

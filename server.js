@@ -6,7 +6,7 @@ function start(port) {
   function onRequest(request, response) {
     if (request.url.indexOf('/favicon.ico') === 0)
       return;
-    handler.handleRequest(request.url, request.headers, response);
+    handler.handleRequest(request, response);
   }
   http.createServer(onRequest).listen(port);
   console.log("server has started.");
