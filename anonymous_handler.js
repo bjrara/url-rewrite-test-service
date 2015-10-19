@@ -7,6 +7,7 @@ function handleRequest(request, response) {
 	response.writeHead(200, {"Content-Type": "text/plain"});
 	var cookie = parseCookie(request.headers.cookie);
   response.write("Destination Url: " + url + "\n");
+	response.write("Headers: " + JSON.stringify(request.headers) + "\n");
 	response.write("Cookies: " + JSON.stringify(cookie));
   response.end();
 }
