@@ -2,6 +2,22 @@ var http = require("http");
 var url = require("url");
 
 function handleRequest(request, response) {
+  if (request.url.indexOf('/error?') === 0) {
+  	genError(request, response);
+		return;
+  } else {
+  	printFullInfo(request, response);
+  }
+}
+
+function genError(request, response) {
+	var statusCode = url.parse(request.url, true).query.code;
+	response.writeHead(statusCode, {"Content-Type": "text/plain"});
+	response.write("Error status code: " + statusCode);
+	response.end();
+}
+
+function printFullInfo(request, response) {
 	var url = request.url;
 	var headers = request.headers;
 	response.writeHead(200, {"Content-Type": "text/plain"});
