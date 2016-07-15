@@ -2,24 +2,46 @@ var http = require("http");
 var url = require("url");
 
 function handleRequest(request, response) {
+	console.log('['+new Date().toUTCString()+']' +request.url);
+	var sleep = url.parse(request.url, true).query.sleep;
   if (request.url.indexOf('/error?') === 0) {
-  	genError(request, response);
+  	genError(request, response, sleep);
 		return;
   } else {
-  	printFullInfo(request, response);
+  	printFullInfo(request, response, sleep);
   }
 }
 
-function genError(request, response) {
+function genError(request, response, sleep) {
 	var statusCode = url.parse(request.url, true).query.code;
+	if (sleep) {
+		setTimeout(function() {
+			response.writeHead(statusCode, {"Content-Type": "text/plain"});
+			response.write("Error status code: " + statusCode);
+			response.end();
+		}, sleep);
+		return;
+	}
 	response.writeHead(statusCode, {"Content-Type": "text/plain"});
 	response.write("Error status code: " + statusCode);
 	response.end();
 }
 
-function printFullInfo(request, response) {
-	var url = request.url;
+function printFullInfo(request, response, sleep) {
 	var headers = request.headers;
+	var url = request.url;
+	if (sleep) {
+		setTimeout(function() {
+			response.writeHead(200, {"Content-Type": "text/plain"});
+		  response.write("Destination Url: " + url + "\n");
+			response.write("Headers: " + JSON.stringify(request.headers) + "\n");
+			setTimeout(function() {
+				console.log("return");
+			  response.end();
+			}, sleep);
+		}, sleep);
+		return;
+	}
 	response.writeHead(200, {"Content-Type": "text/plain"});
 	var cookie = parseCookie(request.headers.cookie);
   response.write("Destination Url: " + url + "\n");
