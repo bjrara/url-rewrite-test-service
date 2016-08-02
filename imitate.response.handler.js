@@ -18,9 +18,11 @@ function handleRequest(request, response, responseSize, responseTime, statusCode
 		setTimeout(function() {
 			writeResponse(response, responseSize);
 		}, responseTime);
+        response.end();
 		return;
 	} else {
 		writeResponse(response, responseSize);
+        response.end();
 	}
 }
 
@@ -29,7 +31,6 @@ function writeResponse(response, responseSize, statusCode) {
 	for (var i = 0; i < responseSize; i++) {
 		response.write(i);
 	}
-	response.end();
 }
 
 exports.handleRequest = handleRequest;
