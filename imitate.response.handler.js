@@ -1,5 +1,4 @@
-var http = require("http");
-var url = require("url");
+var url = require('url');
 
 function handleRequest(request, response) {
 	var queries = url.parse(request.url, true).query;
@@ -7,30 +6,28 @@ function handleRequest(request, response) {
 	var responseSize = queries.responseSize;
 	var statusCode = queries.statusCode;
 	
-	handleRequest(request, response, responseSize, responseTime);
+	handleRequest0(request, response, responseSize, responseTime, statusCode);
 }
 
-function handleRequest(request, response, responseSize, responseTime, statusCode) {
+function handleRequest0(request, response, responseSize, responseTime, statusCode) {
 	if (!responseSize) responseSize = 0;
 	if (!statusCode) statusCode = 200;
 	
 	if (responseTime) {
-		setTimeout(function() {
-			writeResponse(response, responseSize);
+		setInterval(function() {
+			writeResponse(response, responseSize, statusCode);
 		}, responseTime);
-        response.end();
-		return;
 	} else {
-		writeResponse(response, responseSize);
-        response.end();
+		writeResponse(response, responseSize, statusCode);
 	}
 }
 
 function writeResponse(response, responseSize, statusCode) {
 	response.writeHead(statusCode, {'Content-Type': 'text/plain'});
 	for (var i = 0; i < responseSize; i++) {
-		response.write(i);
+		response.write('b');
 	}
+    response.end();
 }
 
 exports.handleRequest = handleRequest;

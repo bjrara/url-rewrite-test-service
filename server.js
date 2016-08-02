@@ -3,6 +3,7 @@ var https = require('https');
 var url = require('url');
 
 var handler = require('./imitate.response.handler')
+//var handler = require('./request.info.handler')
 
 function startHttpServer(port) {
     function onRequest(request, response) {

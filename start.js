@@ -3,7 +3,7 @@ init();
 
 function init() {
     if (process.argv.length < 3) {
-        console.log('$port $protocol is required.');
+        console.log('[ERROR] $port $protocol is required.');
         return;
     }
     

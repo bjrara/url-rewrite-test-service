@@ -3,24 +3,19 @@ var url = require('url');
 function handleRequest(request, response) {
     var queries = url.parse(request.url, true).query;
     var sleep = queries.sleep;
-    var statusCode = queries.code;
+    var statusCode = queries.statusCode;
     
-    handleRequest(request, response, sleep, statusCode);
+    handleRequest0(request, response, sleep, statusCode);
 }
 
-function handleRequest(request, response, sleep, statusCode) {
+function handleRequest0(request, response, sleep, statusCode) {
     if (!statusCode) statusCode = 200;
     if (sleep) {
-    	if (responseTime) {
-    		setTimeout(function() {
-    			writeRequestInfo(response, responseSize);
-    		}, responseTime);
-            response.end();
-    		return;
-    	} else {
-    		writeRequestInfo(response, responseSize);
-            response.end();
-    	}
+        setInterval(function() {
+            writeRequestInfo(request, response, statusCode);
+        }, sleep);
+    } else {
+        writeRequestInfo(request, response, statusCode);
     }
 }
 
@@ -36,6 +31,8 @@ function writeRequestInfo(request, response, statusCode) {
     if (cookie) {
         response.write("Cookies: " + JSON.stringify(cookie));
     }
+    
+    response.end();
 }
 
 function parseCookie(cookie) {
@@ -45,7 +42,7 @@ function parseCookie(cookie) {
         var arr = cookie.split('=');
         c[arr.shift().trim()] = decodeURI(arr.join('='));
         
-        process.on('uncaughtException', (err) => {
+        process.on('uncaughtException', function(err) {
             console.log('Caught exception: ' + err);
         });
     });
