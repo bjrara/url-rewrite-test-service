@@ -13,21 +13,25 @@ function handleRequest0(request, response, responseSize, responseTime, statusCod
 	if (!responseSize) responseSize = 0;
 	if (!statusCode) statusCode = 200;
 	
+    writeResponse(response, responseSize, statusCode);
 	if (responseTime) {
 		setInterval(function() {
-			writeResponse(response, responseSize, statusCode);
+            response.end();
 		}, responseTime);
 	} else {
 		writeResponse(response, responseSize, statusCode);
+        response.end();
 	}
 }
 
 function writeResponse(response, responseSize, statusCode) {
 	response.writeHead(statusCode, {'Content-Type': 'text/plain'});
 	for (var i = 0; i < responseSize; i++) {
-		response.write('b');
+		response.write('b', function(err) {
+		    response.end();
+            return;
+		});
 	}
-    response.end();
 }
 
 exports.handleRequest = handleRequest;

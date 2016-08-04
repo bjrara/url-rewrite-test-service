@@ -10,12 +10,15 @@ function handleRequest(request, response) {
 
 function handleRequest0(request, response, sleep, statusCode) {
     if (!statusCode) statusCode = 200;
+    writeRequestInfo(request, response, statusCode);
+     
     if (sleep) {
         setInterval(function() {
-            writeRequestInfo(request, response, statusCode);
+            response.end();
         }, sleep);
     } else {
         writeRequestInfo(request, response, statusCode);
+        response.end();
     }
 }
 
@@ -23,6 +26,7 @@ function writeRequestInfo(request, response, statusCode) {
     var headers = request.headers;
 	var url = request.url;
     
+    console.log(url);
     response.writeHead(statusCode, {"Content-Type": "text/plain"});
     response.write("Path: " + url + "\n");
     response.write("Headers: " + JSON.stringify(request.headers) + "\n");
@@ -31,8 +35,6 @@ function writeRequestInfo(request, response, statusCode) {
     if (cookie) {
         response.write("Cookies: " + JSON.stringify(cookie));
     }
-    
-    response.end();
 }
 
 function parseCookie(cookie) {
