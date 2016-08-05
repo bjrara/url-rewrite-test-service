@@ -25,7 +25,7 @@ function handleRequest0(request, response, responseSize, responseTime, statusCod
 }
 
 function writeResponse(response, responseSize, statusCode) {
-	response.writeHead(statusCode, {'Content-Type': 'text/plain'});
+	response.writeHead(statusCode, {'Content-Type': 'text/plain', 'Content-Length': responseSize});
 	for (var i = 0; i < responseSize; i++) {
 		response.write('b', function(err) {
 		    response.end();
