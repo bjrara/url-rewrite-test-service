@@ -27,13 +27,13 @@ function writeRequestInfo(request, response, statusCode) {
 	var url = request.url;
     
     console.log(url);
-    response.writeHead(statusCode, {"Content-Type": "text/plain"});
-    response.write("Path: " + url + "\n");
-    response.write("Headers: " + JSON.stringify(request.headers) + "\n");
+    response.writeHead(statusCode, {'Content-Type': 'text/plain', 'Content-Length': ''});
+    response.write('Path: ' + url + '\n');
+    response.write('Headers: ' + JSON.stringify(request.headers) + '\n');
     
 	var cookie = parseCookie(request.headers.cookie);
     if (cookie) {
-        response.write("Cookies: " + JSON.stringify(cookie));
+        response.write('Cookies: ' + JSON.stringify(cookie));
     }
 }
 
