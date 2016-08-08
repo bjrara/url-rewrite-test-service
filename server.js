@@ -11,7 +11,9 @@ function startHttpServer(port) {
         handler.handleRequest(request, response);
     }
     
-    http.createServer(onRequest).listen(port);
+    http.createServer(onRequest).on('connection', function(socket) {
+        socket.setTimeout(10000);
+    }).listen(port);
     console.log('http server has started.');
 }
 
